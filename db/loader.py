@@ -27,12 +27,20 @@ def read_file(file) -> pd.DataFrame:
     return df
 
 
-def load_file_to_db(df: pd.DataFrame, engine: Engine, table_name: str) -> str:
+def load_file_to_db(
+    df: pd.DataFrame, engine: Engine, table_name: str, dtypes=None
+) -> str:
     """
-    Upload a DataFrame into PostgreSQL.
+    Upload a DataFrame into PostgreSQL with optional dtype mapping.
     """
     try:
-        df.to_sql(table_name, engine, if_exists="replace", index=False)
+        df.to_sql(
+            table_name,
+            engine,
+            if_exists="replace",
+            index=False,
+            dtype=dtypes,
+        )
         return f"✅ Data uploaded to table `{table_name}`"
     except Exception as e:
         return f"❌ Error while uploading: {e}"
