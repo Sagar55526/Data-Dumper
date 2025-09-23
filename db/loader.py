@@ -1,5 +1,6 @@
 import pandas as pd
 from sqlalchemy.engine import Engine
+from sqlalchemy.types import Date, DateTime
 
 
 def read_file(file) -> pd.DataFrame:
@@ -19,7 +20,7 @@ def read_file(file) -> pd.DataFrame:
                 skipinitialspace=True,
             )
     else:
-        df = pd.read_excel(file)
+        df = pd.read_excel(file, engine="openpyxl")
 
     # Clean column names & strings
     df.columns = df.columns.str.strip()
@@ -39,7 +40,7 @@ def load_file_to_db(
             engine,
             if_exists="replace",
             index=False,
-            dtype=dtypes,
+            dtype=dtypes,  # 👈 apply user-selected datatypes
         )
         return f"✅ Data uploaded to table `{table_name}`"
     except Exception as e:
